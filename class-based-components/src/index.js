@@ -1,35 +1,38 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
+import DisplaySeason from './DisplaySeason'
+import Spinner from './spinner'
 
- class App extends Component {
-  constructor(props) {
-    super(props)
+class App extends Component {
 
-    this.state = {
-      lat: null,
-      errorMessage: ''
-    }
+  state = { lat: null, errorMessage: '' }
 
+  // right place to load data.
+  componentDidMount() {
     window.navigator.geolocation.getCurrentPosition(
-      (position) => {
-        this.setState({ lat: position.coords.latitude})
-      },
-      (err) => {
-        this.setState({ errorMessage: err.message })
-      }
+      (position) => this.setState({ lat: position.coords.latitude }),
+      (err) => this.setState({ errorMessage: err.message })
     )
   }
 
-  render() {             
+  renderContent() {
     if (this.state.errorMessage && !this.state.lat) {
       return <div>Error: {this.state.errorMessage}</div>
     }
     if (!this.state.errorMessage && this.state.lat) {
-      return <div>latitude: {this.state.lat}</div>
+      return <DisplaySeason lat={this.state.lat} />
     }
     //if (!this.state.errorMessage && !this.statelat) {
-      return  <div>Loading....</div>
-    }
+    return <Spinner message="Please accept location request" />
   }
+
+  render() {
+    return (
+      <div className='border red'>
+        {this.renderContent()}
+      </div>
+    )
+  }
+}
 
 ReactDOM.render(<App />, document.querySelector('#root'))
