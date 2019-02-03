@@ -1,38 +1,35 @@
 import React, {Component} from 'react'
 import unsplash from '../api/unsplash'
 import SearcBar from './SearchBar'
+import ImageLst from './ImageList'
 
 class App extends Component {
 
-  state = { 
+  state = {
     images: []
   }
-
-  // must be arrow f. this is lost otherwise. 
-    onSearchSubmit = async (term) => {
+ 
+  onSearchSubmit = async (term) => {
     const response = await unsplash
       .get('/search/photos', {
         params: { query: term },
-        
-    })
-    this.setState({ images: response.data.results})
+
+      })
+    this.setState({ images: response.data.results })
   }
 
-  render () {
+  render() {
     return (
       <div className='ui container' style={{ marginTop: '10px' }}>
         <SearcBar onSubmit={this.onSearchSubmit} />
-        Found: {this.state.images.length} images
+        <ImageLst images={this.state.images} />
       </div>
     )
   }
- 
+
 }
 
 export default App
-
-
-
 
 
 
